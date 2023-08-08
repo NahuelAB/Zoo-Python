@@ -1,0 +1,220 @@
+import random
+
+
+class Animals():
+    def __init__(self, id, species, name, age, sex, type_animal, habitat, country, endangered):
+        self.id = id
+        self.species = species
+        self.name = name
+        self.age = age
+        self.sex = sex
+        self.type_animal = type_animal
+        self.habitat = habitat
+        self.country = country
+        self.endangered = endangered
+
+
+    def feed(self):
+        return(f'El {self.name} esta comiendo')
+
+
+    def sleep(self):
+        return(f'El {self.name} esta durmiendo, NO MOLESTAR')
+
+
+    def entertain(self):
+        return(f' El {self.name} esta siendo entretenido')
+
+
+    def hungry(self):
+        hambre = random.choice([True, False])
+        if hambre == True:
+            respuesta = input(f'El {self.name} tiene hambre, ¿deseas alimentarlo? (si/no): ')
+            if respuesta == 'si':
+                return self.feed()
+            else:
+                return(f'El {self.name} sigue teniendo hambre')
+        else:
+            return(f'El {self.name} no tiene hambre')
+
+
+    def bored(self):
+        aburrido = random.choice([True, False])
+        if aburrido == True:
+            respuesta = input(f'El {self.name} esta aburrido, ¿deseas entretenerlo? (si/no): ')
+            if respuesta == 'si':
+                return self.entertain()
+            else:
+                return(f'El {self.name} sigue aburrido')
+        else:
+            return(f'El {self.name} no esta aburrido')
+
+
+class Carnivores(Animals):
+    def __init__(self, id, species, name, age, sex, type_animal, habitat, country, endangered, prey_type):
+        super().__init__(id, species, name, age, sex, type_animal, habitat, country, endangered)
+        self.prey_type = prey_type
+
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Hervivores(Animals):
+    def __init__(self, id, species, name, age, sex, type_animal, habitat, country, endangered, favourite_plant):
+        super().__init__(id, species, name, age, sex, type_animal, habitat, country, endangered)
+        self.favourite_plant = favourite_plant
+
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Omnivores(Animals):
+    def __init__(self, id, species, name, age, sex, type_animal, habitat, country, endangered, food_preference):
+        super().__init__(id, species, name, age, sex, type_animal, habitat, country, endangered)
+        self.food_preference = food_preference
+
+
+    def __str__(self) -> str:
+        return self.name
+
+
+# Formulario de creacion de animal
+def create_animal():
+    animal_type = input("Ingresa el tipo de animal (1: Carnívoro / 2: Herbívoro / 3: Omnívoro): ")
+    while animal_type not in ["1", "2", "3"]:
+        print("Opción inválida. Por favor ingresa 1, 2 o 3.")
+        animal_type = input("Ingresa el tipo de animal (1: Carnívoro / 2: Herbívoro / 3: Omnívoro): ")
+
+    animal_id = len(animal_list) + 1  # Generar un ID único
+    species = input("Ingresa la familia del animal (p. ej., Ursido, Felino, Equino): ")
+    name = input("Ingresa el nombre del animal (p. ej., Oso pardo, León, Caballo): ")
+    age = int(input("Ingresa la edad del animal en años: "))
+    sex = input("Ingresa el sexo del animal (p. ej., Macho, Hembra): ")
+    type_animal = input("Ingresa el tipo de animal (p. ej., Mamífero, Reptil, Ave): ")
+    habitat = input("Ingresa el hábitat donde vive el animal: ")
+    country = input("Ingresa el país de origen del animal: ")
+    endangered = input("¿Está el animal en peligro de extinción? (si/no): ").lower() == "si"
+
+    if animal_type == "1":
+        prey_type = input("Ingresa el tipo de presa que caza el animal: ")
+        animal = Carnivores(animal_id, species, name, age, sex, type_animal, habitat, country, endangered, prey_type)
+    elif animal_type == "2":
+        favourite_plant = input("Ingresa la planta favorita del animal: ")
+        animal = Hervivores(animal_id, species, name, age, sex, type_animal, habitat, country, endangered, favourite_plant)
+    elif animal_type == "3":
+        food_preference = input("Ingresa la preferencia alimentaria del animal: ")
+        animal = Omnivores(animal_id, species, name, age, sex, type_animal, habitat, country, endangered, food_preference)
+    else:
+        print("Tipo de animal inválido.")
+        return None
+
+    return animal
+
+
+# Detalles de animales
+def display_animal_details(animal):
+    print(f"\nDetalles de {animal.name} ({animal.species})")
+    print(f"ID: {animal.id}")
+    print(f"Especie: {animal.species}")
+    print(f"Nombre: {animal.name}")
+    print(f"Edad: {animal.age} años")
+    print(f"Sexo: {animal.sex}")
+    print(f"Tipo de animal: {animal.type_animal}")
+    print(f"Hábitat: {animal.habitat}")
+    print(f"País de origen: {animal.country}")
+    print(f"En peligro de extinción: {'Sí' if animal.endangered else 'No'}")
+
+    if animal.type_animal == 'Carnivores':
+        print(f"Tipo de presa: {animal.prey_type}")
+    elif animal.type_animal == 'Hervivores':
+        print(f"Planta favorita: {animal.favourite_plant}")
+    elif animal.type_animal == 'Omnivores':
+        print(f"Preferencia alimentaria: {animal.food_preference}")
+
+
+# Menú Principal
+animal_list = []
+
+while True:
+    print("\nMenú Principal:")
+    print("1. Crear Animal")
+    print("2. Simular Comportamientos")
+    print("3. Ver Detalles de un Animal")
+    print("4. Salir")
+
+    choice = input("Ingresa tu elección: ")
+
+    if choice == "1":
+        animal = create_animal()
+        if animal:
+            animal_list.append(animal)
+            print(f"{animal.name} ({animal.species}) ha sido agregado con el ID {animal.id}")
+    elif choice == "2":
+        if not animal_list:
+            print("No hay animales disponibles para simular comportamientos.")
+        else:
+            print("Animales disponibles:")
+            for animal in animal_list:
+                print(f"ID: {animal.id} - {animal.name} ({animal.species})")
+
+            selected_id = int(input("Ingresa el ID del animal que deseas simular: "))
+
+            selected_animal = None
+            for animal in animal_list:
+                if animal.id == selected_id:
+                    selected_animal = animal
+                    break
+
+            if selected_animal:
+                print(f"\nSimulando comportamientos para {selected_animal.name} ({selected_animal.species})")
+                print("1. Alimentar")
+                print("2. Dormir")
+                print("3. Entretener")
+                print("4. Verificar Hambre")
+                print("5. Verificar Aburrimiento")
+                print("6. Volver al Menú Principal")
+                while True:
+                    behavior_choice = input("Ingresa tu elección (1-6): ")
+                    if behavior_choice == "1":
+                        print(selected_animal.feed())
+                    elif behavior_choice == "2":
+                        print(selected_animal.sleep())
+                    elif behavior_choice == "3":
+                        print(selected_animal.entertain())
+                    elif behavior_choice == "4":
+                        print(selected_animal.hungry())
+                    elif behavior_choice == "5":
+                        print(selected_animal.bored())
+                    elif behavior_choice == "6":
+                        break
+                    else:
+                        print("Elección inválida. Por favor ingresa una opción válida.")
+            else:
+                print("No se encontró ningún animal con ese ID.")
+    elif choice == "3":
+        if not animal_list:
+            print("No hay animales disponibles para ver detalles.")
+        else:
+            print("Animales disponibles:")
+            for animal in animal_list:
+                print(f"ID: {animal.id} - {animal.name} ({animal.species})")
+
+            animal_id = int(input("Ingresa el ID del animal que deseas ver detalles: "))
+
+            selected_animal = None
+            for animal in animal_list:
+                if animal.id == animal_id:
+                    selected_animal = animal
+                    break
+
+            if selected_animal:
+                display_animal_details(selected_animal)
+            else:
+                print("No se encontró ningún animal con ese ID.")
+    elif choice == "4":
+        print("Saliendo del programa.")
+        break
+    else:
+        print("Elección inválida. Por favor ingresa una opción válida.")
